@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import "./app.css";
 
 // Components
 import Country from "./components/Country";
@@ -28,7 +29,7 @@ function App() {
         setTextInput(event.target.value);
 
         if (inputValue === "") {
-            setCountries(allCountries); // Restablecemos todos los países si el input está vacío
+            setCountries(allCountries);
         } else {
             const filteredCountries = allCountries.filter((country) => country.name.common.toLowerCase().startsWith(inputValue));
             setCountries(filteredCountries);
@@ -41,9 +42,13 @@ function App() {
                 find countries <input type="text" value={textInput} onChange={updateInput} />{" "}
             </p>
 
-            {countries.length > 10 && <p>Too many matches, specify another filter.</p>}
-            {countries.length === 1 && <Country name={countries[0].name.common} capital={countries[0].capital[0]} area={countries[0].area} languages={countries[0].languages} />}
-            {countries.length <= 10 && countries.length > 1 && countries.map((country) => <Country key={country.name.common} name={country.name.common} />)}
+            {countries.length > 10 ? (
+                <p>Too many matches, specify another filter.</p>
+            ) : countries.length === 1 ? (
+                <Country name={countries[0].name.common} capital={countries[0].capital[0]} area={countries[0].area} languages={countries[0].languages} flag={countries[0].flags.png} />
+            ) : (
+                countries.map((country) => <Country key={country.name.common} name={country.name.common} countries={countries} />)
+            )}
         </>
     );
 }
